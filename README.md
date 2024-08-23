@@ -3,7 +3,7 @@ My own project trying to reproduce a gpt model. I trained it both on the tiny sh
 
 Here there is some output of the model on tiny shakespeare:
 
-_CORIOLANUS:
+*CORIOLANUS:
 If should desire: see he here thoughts, as let
 most she the shame; here's it have paid too. He give
 a it poison, by the trull; I do none worse it
@@ -16,7 +16,7 @@ Brach, windneed, though know you.
 
 Girl:
 Such fault lose here be all: he gone, Saint Gmustirty, Aumeum,
-villanous intendedss in's grave your wrongs she._
+villanous intendedss in's grave your wrongs she.*
 
 
 Plot of the losses:
