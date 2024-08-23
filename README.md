@@ -25,7 +25,7 @@ villanous intendedss in's grave your wrongs she.*
 
 The plot below visualizes the loss over time during training:
 
-![Loss Plot]((https://github.com/Gianluca-Sasanelli/mygpt/blob/main/assets/losses-tinyshakespeare.png))
+![Loss Plot](https://github.com/Gianluca-Sasanelli/mygpt/blob/main/assets/losses-tinyshakespeare.png)
 
 
 ## Sample output from the dailymails dataset:
