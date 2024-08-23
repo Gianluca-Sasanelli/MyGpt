@@ -1,0 +1,35 @@
+model_params:
+  n_layers: 4
+  n_heads: 4
+  emb: 256
+  dropout: 0.01
+
+training_params:
+  batch_size: 32
+  context: 156
+  gradient_accumulation_iter: 1
+  start: \n
+  num_samples: 1
+  max_new_tokens: 256
+
+optimizer_params:
+  max_lr: 0.001
+  max_iters: 5000
+  weight_decay: 0.01
+  b1: 0.9 
+  b2: 0.95
+  grad_clip: 1.0
+
+scheduler_params:
+  decay_lr: True
+  warmup_iters: 500
+  lr_decay_iters: 5000 
+  min_lr: 0.0001
+
+logging_params:
+  out_dir: outputs
+  always_save_checkpoint: False
+  eval_iters: 10
+  eval_interval: 100
+  log_interval: 10
+  init_from: scratch
