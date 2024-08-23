@@ -10,7 +10,7 @@ Below is an example of the model's output when trained on the tiny Shakespeare d
 If should desire: see he here thoughts, as let  
 most she the shame; here's it have paid too. He give  
 a it poison, by the trull; I do none worse it  
-notious noty, done to half dissolUes, hath  
+notious noty, done to half dissolves, hath  
 varvetulla bean you ever by an a man's loss a  
 as burnm, that use if my remlioned see so.*
 
