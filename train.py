@@ -1,15 +1,31 @@
-import os, time, math, pickle, torch
+import os, time, math, pickle, torch, argparse, yaml
 import numpy as np
 from model import GPT
 
-out_dir = "outputs"
-always_save_checkpoint = False
-eval_iters = 10
-eval_interval = 150
-log_interval = 10
-init_from = "scratch"
-data_dir = r"C:\Users\Gianl\Desktop\Projects\MLProjects\Dailymails_summurization_data\data\cnn_articles"
-meta = data_dir + os.sep + "meta.pkl" if os.path.exists(data_dir + os.sep + "meta.pkl") else None
+#Getting the config from the command line
+parser = argparse.ArgumentParser()
+parser.add_argument("--config", type = str, required = True, help = "config path")
+
+args = parser.parse_args()
+config_path = args.config
+with open(config_path) as file:
+    config = yaml.safe_load(file)
+
+#logging parameters
+logging_params = config["logging_params"]
+out_dir = logging_params["out_dir"]
+always_save_checkpoint = logging_params["always_save_checkpoint"]
+eval_iters = logging_params["eval_iters"]
+eval_interval = logging_params["eval_interval"]
+log_interval = logging_params["log_interval"]
+init_from = logging_params["init_from"]
+del logging_params 
+
+#dataset parameters
+dataset = config["dataset"]
+print(dataset)
+data_dir = r"C:\Users\Gianl\Desktop\gpt-repository\data"
+meta = data_dir + os.sep + dataset + "-meta.pkl" if os.path.exists(data_dir + os.sep + dataset + "-meta.pkl") else None
 if meta:
     with open(meta, "rb") as f:
         meta = pickle.load(f)
@@ -20,35 +36,48 @@ else:
     import tiktoken
     tokenizer = tiktoken.get_encoding("gpt2")
     vocab_size = 50304
-#data
-gradient_accomulation_iter = 1 
-batch_size = 32
-context = 256
+#getting vocab size
+print("Vocab size is:", vocab_size)
+
 #model
-n_layers = 4
-n_heads= 4
-emb = 256
-dropout = 0.0
+model_params = config["model_params"]
+n_layers = model_params["n_layers"]
+n_heads= model_params["n_heads"]
+emb = model_params["emb"]
+dropout = model_params["dropout"]
+del model_params
+
+# training params
+training_params = config["training_params"]
+gradient_accomulation_iter = training_params["gradient_accomulation_iter"]
+batch_size = training_params["batch_size"]
+context = training_params["context"]
 #sampling during training
 
-sample_duringtraining = True
-start = "\n"
-num_samples = 1
-max_new_tokens = 256
-#Optimizier 
-max_lr = 1e-3
-max_iters = 5000
-weight_decay = 0.01
-b1 = 0.9 
-b2 = 0.95
-grad_clip = 1.0 # clipping the norm of the gradient to this value
+sample_duringtraining = training_params["sample_duringtraining"]
+start = training_params["start"] 
+num_samples = training_params["num_samples"]
+max_new_tokens = training_params["max_new_tokens"]
+del training_params
+
+#Optimizier
+optimizer_params = config["optimizer_params"] 
+max_lr = optimizer_params["max_lr"]
+max_iters = optimizer_params["max_iters"]
+weight_decay = optimizer_params["weight_decay"]
+b1 = optimizer_params["b1"]
+b2 = optimizer_params["b2"]
+grad_clip = optimizer_params["grad_clip"] # clipping the norm of the gradient to this value
+del optimizer_params
 
 #learning rate scheduler
-decay_lr = True
-warmup_iters = 500
-lr_decay_iters = 5000 # iterations of cosine decay, should be similar to the max iterations per Karpathy
-min_lr = 1e-4 # minimum learning rate of the decay, should be similar to lr/10 per Karpathy
-
+scheduler_params = config["scheduler_params"]
+decay_lr = scheduler_params["decay_lr"]
+warmup_iters = scheduler_params["warmup_iters"]
+lr_decay_iters = scheduler_params["lr_decay_iters"] # iterations of cosine decay, should be similar to the max iterations per Karpathy
+min_lr = scheduler_params["min_lr"] # minimum learning rate of the decay, should be similar to lr/10 per Karpathy
+del scheduler_params
+del config
 # system
 device = "cuda"
 dtype = "bfloat16"if torch.cuda.is_available() and torch.cuda.is_bf16_supported else "float16"
@@ -90,9 +119,9 @@ def get_batch(split):
     # https://stackoverflow.com/questions/45132940/numpy-memmap-memory-usage-want-to-iterate-once/61472122#61472122
     if split == 'train':
         #already tokenized data
-        data = np.memmap(os.path.join(data_dir, 'train.bin'), dtype=np.uint16, mode='r')
+        data = np.memmap(os.path.join(data_dir, dataset + '-train.bin'), dtype=np.uint16, mode='r')
     else:
-        data = np.memmap(os.path.join(data_dir, 'val.bin'), dtype=np.uint16, mode='r')
+        data = np.memmap(os.path.join(data_dir, dataset + '-val.bin'), dtype=np.uint16, mode='r')
     ix = torch.randint(len(data) - context, (batch_size,))
     x = torch.stack([torch.from_numpy((data[i:i+context]).astype(np.int64)) for i in ix])
     y = torch.stack([torch.from_numpy((data[i+1:i+1+context]).astype(np.int64)) for i in ix])
@@ -145,6 +174,7 @@ if sample_duringtraining and not meta:
     start_ids = tokenizer.encode(start, allowed_special={start})
     x = torch.tensor(start_ids, dtype = torch.int64, device = device).unsqueeze(0)
 if sample_duringtraining and meta:
+    print(start)
     start_ids = encode[start]
     x = torch.tensor([start_ids], dtype = torch.int64, device = device).unsqueeze(0)
     
@@ -177,7 +207,7 @@ while True:
         param_group["lr"] = lr
     if iter_num % eval_interval == 0 :
         losses = estimate_loss()
-        val_losses.append(losses)
+        val_losses.append(losses["val"])
         print(f"val | step {iter_num}| train loss {losses['train']:.4f}| val loss {losses['val']:.4f}")
         if sample_duringtraining:
             sampling(x)
@@ -191,12 +221,12 @@ while True:
                     "iter_num": iter_num,
                     "best_val_losses": best_val_losses,
                 }    
-                with open(out_dir + os.sep + "train_losses.pkl", "wb") as file:
-                    pickle.dump(train_losses, file)
-                with open(out_dir + os.sep +  "val_losses.pkl", "wb") as file:
-                    pickle.dump(val_losses, file)
                 print(f"save checkpoint to {out_dir}")
                 torch.save(checkpoint, os.path.join(out_dir, 'ckpt.pt'))
+            with open(out_dir + os.sep + "train_losses.pkl", "wb") as file:
+                    pickle.dump(train_losses, file)
+            with open(out_dir + os.sep +  "val_losses.pkl", "wb") as file:
+                    pickle.dump(val_losses, file)
     #gradient accumulation        
     for micro_step in range(gradient_accomulation_iter):
         with ctx:
@@ -224,7 +254,6 @@ while True:
             pickle.dump(train_losses, file)
         with open(out_dir + os.sep +  "val_losses.pkl", "wb") as file:
             pickle.dump(val_losses, file)
-        print(f"save checkpoint to {out_dir}")
         break
     
     
