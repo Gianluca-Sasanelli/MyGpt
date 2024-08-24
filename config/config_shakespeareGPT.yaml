@@ -7,8 +7,9 @@ model_params:
 training_params:
   batch_size: 32
   context: 156
-  gradient_accumulation_iter: 1
-  start: \n
+  gradient_accomulation_iter: 1
+  sample_duringtraining: True
+  start: "\n"
   num_samples: 1
   max_new_tokens: 256
 
@@ -25,6 +26,8 @@ scheduler_params:
   warmup_iters: 500
   lr_decay_iters: 5000 
   min_lr: 0.0001
+
+dataset: "tinyshakespeare"
 
 logging_params:
   out_dir: outputs

@@ -5,10 +5,11 @@ model_params:
   dropout: 0.01
 
 training_params:
-  batch_size: 8
-  context: 768
-  gradient_accumulation_iter: 16
-  start: <|endoftext|> 
+  batch_size: 16
+  context: 512
+  gradient_accomulation_iter: 8
+  sample_duringtraining: False
+  start: "<|endoftext|>"
   num_samples: 1
   max_new_tokens: 256
 
@@ -33,3 +34,5 @@ logging_params:
   eval_interval: 200
   log_interval: 30
   init_from: scratch
+
+dataset: "dailymails"
