@@ -1,6 +1,32 @@
 # Reproducing a GPT Model
 
-This repository contains my personal project aimed at reproducing a GPT model. The model has been trained on two different datasets: the **tiny Shakespeare dataset** and the **DailyMail dataset** found online.
+# GPT Model Reproduction Project
+
+This repository contains my project to reproduce a GPT model. The model has been trained on two datasets: the Tiny Shakespeare dataset and the DailyMail dataset, both available online.
+
+## Datasets and Tokenization
+
+### 1. Tiny Shakespeare Dataset
+- **Tokenizer:** Simple tokenizer that translates each character into an integer.
+- **Vocabulary Size:** 65
+- **Model Size:** 3M parameters
+- **Training Time:** Less than 5 minutes
+
+### 2. DailyMail Dataset
+- **Tokenizer:** OpenAI GPT-2 tokenizer
+- **Vocabulary Size:** 50,257
+- **Model Size:** 88M parameters
+- **Training Time:** 7 hours (stopped before reaching maximum accuracy)
+
+## How to Use
+
+### Training
+
+To train your model, use the following command:
+
+```bash
+python train.py --config $configPath
+```
 
 ## Sample Output from the Tiny Shakespeare Dataset
 
