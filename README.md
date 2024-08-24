@@ -30,5 +30,7 @@ The plot below visualizes the loss over time during training:
 
 ## Loss Plot for dailymails
 
+![Loss Plot](https://github.com/Gianluca-Sasanelli/mygpt/blob/main/assets/losses-dailymails.png)
+
 
 
