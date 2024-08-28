@@ -52,7 +52,7 @@ The plot below visualizes the loss over time during training:
 
 ## Sample output from the dailymails dataset:
 
-* The U.S. Embassy in Washington, Virginia, said it would be a "great relief" for the government to take the country. "We are not going to make sure that we have a lot of time to do," said Rep. Michael D.C. CNN's Elise Labott contributed to this report.<|endoftext>|Two people have been arrested in the country's capital city of Raqqa, a city in the city of Raqqa, Syria, in the area. The suspected gunman, who was arrested on suspicion of being in the country, is charged with first-degree murder, aggravated murder and aggravated kidnapping. The suspect, who was caught in a car in the city's capital, is charged with first-degree murder and aggravated murder by the force. Scroll down for video *
+*The U.S. Embassy in Washington, Virginia, said it would be a "great relief" for the government to take the country. "We are not going to make sure that we have a lot of time to do," said Rep. Michael D.C. CNN's Elise Labott contributed to this report.<|endoftext>|Two people have been arrested in the country's capital city of Raqqa, a city in the city of Raqqa, Syria, in the area. The suspected gunman, who was arrested on suspicion of being in the country, is charged with first-degree murder, aggravated murder and aggravated kidnapping. The suspect, who was caught in a car in the city's capital, is charged with first-degree murder and aggravated murder by the force. Scroll down for video*
 
 ## Loss Plot for dailymails
 
