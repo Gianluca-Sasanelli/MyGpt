@@ -1,7 +1,5 @@
 # Reproducing a GPT Model
 
-# GPT Model Reproduction Project
-
 This repository contains my project to reproduce a GPT model. I followed mostly Karpathy's settings of the model and the train code. The model has been trained on two datasets: the Tiny Shakespeare dataset and the DailyMail dataset.
 
 ## Datasets and Tokenization
