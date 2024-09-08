@@ -6,7 +6,7 @@ class Feed_Forward(nn.Module):
     def __init__(self, context, emb,  dropout):
         super().__init__()
         self.lin1 = nn.Linear(emb, 4 * emb, bias = False) # hidden dimensionality of 4, no bias
-        self.act1 = nn.GELU() #using the gel activation function
+        self.act1 = nn.GELU() #using the gelu activation function
         self.drop= nn.Dropout(dropout)
         self.output_projection = nn.Linear(4 * emb, emb, bias = False)
 
