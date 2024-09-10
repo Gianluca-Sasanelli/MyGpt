@@ -9,7 +9,7 @@ start = "\n"
 num_samples = 3
 max_new_tokens = 250 # number of tokens generated in each sample
 temperature = 0.5
-top_k = 200 #retain onlt the first topo k topkens, the othe will have probabilities of 0
+top_k = 200 #retain only the first top k (higher probability) tokens, the other will have probabilities of 0
 #system
 seed = 42
 device = "cuda"
